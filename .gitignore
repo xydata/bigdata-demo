@@ -78,3 +78,5 @@ project/plugins/project/
 
 ### Scala Typesafe Config ###
 application.conf
+
+src/main/resources/reference.conf
