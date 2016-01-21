@@ -4,7 +4,7 @@
 ### Demonstration project to monitor Twitter stream to identify & act on unexpected increases in tweet volume 
 
 This is WIP.
-[Getting Started](https://github.com/xydata/bigdata-demo#how-to-run)
+[Getting Started](https://github.com/xydata/bigdata-demo#getting-started)
 
 Current infrastructure:
 - Tweets are serialized to Avro (without code generation) and sent to Kafka
