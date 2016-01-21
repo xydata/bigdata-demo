@@ -22,8 +22,8 @@ dependencies {
     compile "org.apache.spark:spark-streaming-kafka_${scalaVersion}:1.6.0"
 
     compile 'org.apache.avro:avro:1.7.7'
-    compile "com.twitter:bijection-core_${scalaVersion}:0.7.2"
-    compile "com.twitter:bijection-avro_${scalaVersion}:0.7.2"
+    compile "com.twitter:bijection-core_${scalaVersion}:0.8.1"
+    compile "com.twitter:bijection-avro_${scalaVersion}:0.8.1"
 }
 
 
