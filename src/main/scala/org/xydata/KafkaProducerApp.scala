@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 import kafka.javaapi.producer.Producer
 import kafka.producer.{KeyedMessage, ProducerConfig}
 import TwitterStream.OnTweetPosted
-import net.mkrcah.avro.Tweet
+import org.xydata.avro.Tweet
 import twitter4j.{FilterQuery, Status}
 
 object KafkaProducerApp {
