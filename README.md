@@ -1,7 +1,7 @@
 
 ######This Project is a folk of mkrcah/scala-kafka-twitter######
 
-### Example project to integrate Kafka, Avro and Spark Streaming with Twitter as a stream source 
+### Demonstration project to monitor Twitter stream to identify & act on unexpected increases in tweet volume 
 
 This is WIP.
 
