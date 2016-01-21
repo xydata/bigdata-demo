@@ -1,16 +1,15 @@
-package net.mkrcah
+package org.xydata
 
+import com.twitter.bijection.avro.SpecificAvroCodecs
 import com.typesafe.config.ConfigFactory
 import kafka.serializer.{DefaultDecoder, StringDecoder}
-import com.twitter.bijection.avro.SpecificAvroCodecs
 import net.mkrcah.avro.Tweet
 import org.apache.spark._
 import org.apache.spark.storage.StorageLevel
-import org.apache.spark.streaming.StreamingContext._
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka._
 
-object KafkaConsumerApp extends App{
+object KafkaConsumerApp extends App {
 
   private val conf = ConfigFactory.load()
 
@@ -28,7 +27,7 @@ object KafkaConsumerApp extends App{
 
   val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Tweet].invert(x._2).toOption)
 
-  val wordCounts = tweets.flatMap(_.getText.split(" ")).map((_,1)).reduceByKey(_ + _)
+  val wordCounts = tweets.flatMap(_.getText.split(" ")).map((_, 1)).reduceByKey(_ + _)
   val countsSorted = wordCounts.transform(_.sortBy(_._2, ascending = false))
 
   countsSorted.print()

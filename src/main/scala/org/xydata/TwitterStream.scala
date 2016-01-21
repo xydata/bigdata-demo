@@ -1,4 +1,4 @@
-package net.mkrcah
+package org.xydata
 
 import com.typesafe.config.ConfigFactory
 import twitter4j._
