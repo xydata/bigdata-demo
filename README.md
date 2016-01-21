@@ -1,4 +1,6 @@
 
+######This Project is a folk of mkrcah/scala-kafka-twitter######
+
 ### Example project to integrate Kafka, Avro and Spark Streaming with Twitter as a stream source 
 
 This is WIP.
@@ -6,6 +8,8 @@ This is WIP.
 Current infrastructure:
 - Tweets are serialized to Avro (without code generation) and sent to Kafka
 - A Kafka consumer picks up serialized Tweets and prints them to stdout
+
+![image](https://docs.google.com/drawings/d/1jVxh473mabBTm5tDIDd7dRRDgrNGorXefEp6ZDdyIyc/pub?w=960&h=720)
 
 ### How to run
 
