@@ -1,5 +1,5 @@
 {
-	"namespace": "net.mkrcah.avro",
+	"namespace": "org.xydata.avro",
 	"type": "record",
 	"name": "Tweet",
 	"fields": [

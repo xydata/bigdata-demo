@@ -3,7 +3,7 @@ package org.xydata
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import com.typesafe.config.ConfigFactory
 import kafka.serializer.{DefaultDecoder, StringDecoder}
-import net.mkrcah.avro.Tweet
+import org.xydata.avro.Tweet
 import org.apache.spark._
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming._
