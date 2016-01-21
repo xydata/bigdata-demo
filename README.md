@@ -7,7 +7,9 @@ This is WIP.
 
 Current infrastructure:
 - Tweets are serialized to Avro (without code generation) and sent to Kafka
-- A Kafka consumer picks up serialized Tweets and prints them to stdout
+- A Kafka consumer picks up serialized Tweets 
+- Monitor tweets for unexpected volume in Spark
+- Volume thresholds and detected alerts managed n HDFS (Inspired also from [hdp22-twitter-demo](https://github.com/hortonworks-gallery/hdp22-twitter-demo))
 
 ![image](https://docs.google.com/drawings/d/1jVxh473mabBTm5tDIDd7dRRDgrNGorXefEp6ZDdyIyc/pub?w=960&h=720)
 
@@ -31,4 +33,3 @@ This will run Spark streaming connected to the Kafka cluster. In 5-second interv
 the program reads Avro tweets from Kafka, deserializes the tweet texts to strings 
 and print 10 most frequent words
  
-
