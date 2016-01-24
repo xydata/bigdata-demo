@@ -1,7 +1,7 @@
 
 ######This Project is a folk of mkrcah/scala-kafka-twitter######
 
-### Demonstration project to monitor Twitter stream to identify & act on unexpected increases in tweet volume 
+### Demonstration project to monitor Twitter stream and identify on unexpected increases in tweet volume 
 
 This is WIP.
 [Getting Started](https://github.com/xydata/bigdata-demo#getting-started)

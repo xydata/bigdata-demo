@@ -6,7 +6,7 @@ import com.twitter.bijection.avro.SpecificAvroCodecs.{toBinary, toJson}
 import com.typesafe.config.ConfigFactory
 import kafka.javaapi.producer.Producer
 import kafka.producer.{KeyedMessage, ProducerConfig}
-import TwitterStream.OnTweetPosted
+import org.xydata.TwitterStream.OnTweetPosted
 import org.xydata.avro.Tweet
 import twitter4j.{FilterQuery, Status}
 
@@ -24,15 +24,13 @@ object KafkaProducerApp {
     new Producer[String, Array[Byte]](config)
   }
 
-  val filterUsOnly = new FilterQuery().locations(
-    Array(-126.562500, 30.448674),
-    Array(-61.171875, 44.087585))
+  val filterSPComs = new FilterQuery().track(HashtagsLoader.fetchHashtags(400): _*)
 
 
   def main(args: Array[String]) {
     val twitterStream = TwitterStream.getStream
     twitterStream.addListener(new OnTweetPosted(s => sendToKafka(toTweet(s))))
-    twitterStream.filter(filterUsOnly)
+    twitterStream.filter(filterSPComs)
   }
 
   private def toTweet(s: Status): Tweet = {
