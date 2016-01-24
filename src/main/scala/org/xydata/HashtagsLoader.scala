@@ -33,6 +33,7 @@ object HashtagsLoader {
         }
       }
     }
+    println("Total hashtags number: " + stockSymbolList.length)
     src.close
     stockSymbolList
   }
