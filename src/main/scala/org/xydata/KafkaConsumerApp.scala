@@ -25,9 +25,22 @@ object KafkaConsumerApp extends App {
       sc, kafkaParams, topics, StorageLevel.MEMORY_ONLY)
   }
 
+  val dictionary = DictionaryLoader.fetchWords()
+  val hashtags = HashtagsLoader.fetchHashtags()
   val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Tweet].invert(x._2).toOption)
-  // TODO add filter and calculation code
-  val wordCounts = tweets.flatMap(_.getText.split(" ")).map((_, 1)).reduceByKey(_ + _)
+  val wordCounts = tweets.flatMap(t => scoring(t)).reduceByKey(_ + _)
+
+  def scoring(t: Tweet): Seq[(String, Int)] = {
+    val words = t.getText.split(" ")
+    val score = words.filter(dictionary.contains)
+      .map(dictionary.get)
+      .foldLeft(Some(0))((a, b) => Some(a.getOrElse(0) + b.getOrElse(0)))
+    val matchedHashtags = words.filter(hashtags.contains)
+    var scoreMap = Seq[(String, Int)]()
+    matchedHashtags.foreach((tag) => scoreMap = scoreMap :+(tag, score.get))
+    scoreMap
+  }
+
   val countsSorted = wordCounts.transform(_.sortBy(_._2, ascending = false))
 
   countsSorted.print()

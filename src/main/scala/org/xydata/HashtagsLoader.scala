@@ -18,7 +18,7 @@ object HashtagsLoader {
   //Delimitor used in CSV file
   private val FILE_DELIMITOR = ","
 
-  def fetchHashtags(num: Int = 50): Array[String] = {
+  def fetchHashtags(num: Int = MAX_NUM_TWITTER_HASHTAG): Array[String] = {
     val stream: InputStream = getClass.getResourceAsStream(CSV_LOCATION)
     var stockSymbolList = Array[String]()
     println("Reading stock symbols to send to Twitter from " + CSV_LOCATION)

@@ -26,7 +26,7 @@ object KafkaProducerApp {
 
   def main(args: Array[String]) {
     val twitterStream = TwitterStream.getStream
-    val filterSPComs = new FilterQuery().track(HashtagsLoader.fetchHashtags(400): _*)
+    val filterSPComs = new FilterQuery().track(HashtagsLoader.fetchHashtags(): _*)
     twitterStream.addListener(new OnTweetPosted(s => sendToKafka(toTweet(s))))
     twitterStream.filter(filterSPComs)
   }
