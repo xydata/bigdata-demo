@@ -1,0 +1,600 @@
+{
+  "type" : "record",
+  "name" : "Status",
+  "namespace" : "twitter4j",
+  "doc" : "Schema for twitter4j.Status",
+  "fields" : [ {
+    "name" : "accessLevel",
+    "type" : "int"
+  }, {
+    "name" : "contributors",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "double"
+    } ]
+  }, {
+    "name" : "createdAt",
+    "type" : [ "null", "long" ]
+  }, {
+    "name" : "currentUserRetweetId",
+    "type" : "long"
+  }, {
+    "name" : "extendedMediaEntities",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "ExtendedMediaEntity",
+        "doc" : "Schema for twitter4j.ExtendedMediaEntity",
+        "fields" : [ {
+          "name" : "displayURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "end",
+          "type" : "int"
+        }, {
+          "name" : "expandedURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "id",
+          "type" : "long"
+        }, {
+          "name" : "mediaURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "mediaURLHttps",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "sizes",
+          "type" : [ "null", {
+            "type" : "map",
+            "values" : {
+              "type" : "record",
+              "name" : "Size",
+              "doc" : "Schema for twitter4j.MediaEntity$Size",
+              "fields" : [ {
+                "name" : "height",
+                "type" : "int"
+              }, {
+                "name" : "resize",
+                "type" : "int"
+              }, {
+                "name" : "width",
+                "type" : "int"
+              } ]
+            }
+          } ]
+        }, {
+          "name" : "start",
+          "type" : "int"
+        }, {
+          "name" : "text",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "type",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "url",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "videoAspectRatioHeight",
+          "type" : "int"
+        }, {
+          "name" : "videoAspectRatioWidth",
+          "type" : "int"
+        }, {
+          "name" : "videoDurationMillis",
+          "type" : "long"
+        }, {
+          "name" : "videoVariants",
+          "type" : [ "null", {
+            "type" : "array",
+            "items" : {
+              "type" : "record",
+              "name" : "Variant",
+              "doc" : "Schema for twitter4j.ExtendedMediaEntity$Variant",
+              "fields" : [ {
+                "name" : "bitrate",
+                "type" : "int"
+              }, {
+                "name" : "contentType",
+                "type" : [ "null", "string" ]
+              }, {
+                "name" : "url",
+                "type" : [ "null", "string" ]
+              } ]
+            }
+          } ]
+        } ]
+      }
+    } ]
+  }, {
+    "name" : "favoriteCount",
+    "type" : "int"
+  }, {
+    "name" : "favorited",
+    "type" : "boolean"
+  }, {
+    "name" : "geoLocation",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "GeoLocation",
+      "doc" : "Schema for twitter4j.GeoLocation",
+      "fields" : [ {
+        "name" : "latitude",
+        "type" : "double"
+      }, {
+        "name" : "longitude",
+        "type" : "double"
+      } ]
+    } ]
+  }, {
+    "name" : "hashtagEntities",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "HashtagEntity",
+        "doc" : "Schema for twitter4j.HashtagEntity",
+        "fields" : [ {
+          "name" : "end",
+          "type" : "int"
+        }, {
+          "name" : "start",
+          "type" : "int"
+        }, {
+          "name" : "text",
+          "type" : [ "null", "string" ]
+        } ]
+      }
+    } ]
+  }, {
+    "name" : "id",
+    "type" : "long"
+  }, {
+    "name" : "inReplyToScreenName",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "inReplyToStatusId",
+    "type" : "long"
+  }, {
+    "name" : "inReplyToUserId",
+    "type" : "long"
+  }, {
+    "name" : "lang",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "mediaEntities",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "MediaEntity",
+        "doc" : "Schema for twitter4j.MediaEntity",
+        "fields" : [ {
+          "name" : "displayURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "end",
+          "type" : "int"
+        }, {
+          "name" : "expandedURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "id",
+          "type" : "long"
+        }, {
+          "name" : "mediaURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "mediaURLHttps",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "sizes",
+          "type" : [ "null", {
+            "type" : "map",
+            "values" : "Size"
+          } ]
+        }, {
+          "name" : "start",
+          "type" : "int"
+        }, {
+          "name" : "text",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "type",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "url",
+          "type" : [ "null", "string" ]
+        } ]
+      }
+    } ]
+  }, {
+    "name" : "place",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "Place",
+      "doc" : "Schema for twitter4j.Place",
+      "fields" : [ {
+        "name" : "accessLevel",
+        "type" : "int"
+      }, {
+        "name" : "boundingBoxCoordinates",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : {
+            "type" : "array",
+            "items" : "GeoLocation"
+          }
+        } ]
+      }, {
+        "name" : "boundingBoxType",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "containedWithIn",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "Place"
+        } ]
+      }, {
+        "name" : "country",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "countryCode",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "fullName",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "geometryCoordinates",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : {
+            "type" : "array",
+            "items" : "GeoLocation"
+          }
+        } ]
+      }, {
+        "name" : "geometryType",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "id",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "placeType",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "rateLimitStatus",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "RateLimitStatus",
+          "doc" : "Schema for twitter4j.RateLimitStatus",
+          "fields" : [ {
+            "name" : "limit",
+            "type" : "int"
+          }, {
+            "name" : "remaining",
+            "type" : "int"
+          }, {
+            "name" : "resetTimeInSeconds",
+            "type" : "int"
+          }, {
+            "name" : "secondsUntilReset",
+            "type" : "int"
+          } ]
+        } ]
+      }, {
+        "name" : "streetAddress",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "url",
+        "type" : [ "null", "string" ]
+      } ]
+    } ]
+  }, {
+    "name" : "possiblySensitive",
+    "type" : "boolean"
+  }, {
+    "name" : "rateLimitStatus",
+    "type" : [ "null", "RateLimitStatus" ]
+  }, {
+    "name" : "retweet",
+    "type" : "boolean"
+  }, {
+    "name" : "retweetCount",
+    "type" : "int"
+  }, {
+    "name" : "retweeted",
+    "type" : "boolean"
+  }, {
+    "name" : "retweetedByMe",
+    "type" : "boolean"
+  }, {
+    "name" : "retweetedStatus",
+    "type" : [ "null", "Status" ]
+  }, {
+    "name" : "scopes",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "Scopes",
+      "doc" : "Schema for twitter4j.Scopes",
+      "fields" : [ {
+        "name" : "placeIds",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "string"
+        } ]
+      } ]
+    } ]
+  }, {
+    "name" : "source",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "symbolEntities",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "SymbolEntity",
+        "doc" : "Schema for twitter4j.SymbolEntity",
+        "fields" : [ {
+          "name" : "end",
+          "type" : "int"
+        }, {
+          "name" : "start",
+          "type" : "int"
+        }, {
+          "name" : "text",
+          "type" : [ "null", "string" ]
+        } ]
+      }
+    } ]
+  }, {
+    "name" : "text",
+    "type" : [ "null", "string" ]
+  }, {
+    "name" : "truncated",
+    "type" : "boolean"
+  }, {
+    "name" : "urlentities",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "URLEntity",
+        "doc" : "Schema for twitter4j.URLEntity",
+        "fields" : [ {
+          "name" : "displayURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "end",
+          "type" : "int"
+        }, {
+          "name" : "expandedURL",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "start",
+          "type" : "int"
+        }, {
+          "name" : "text",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "url",
+          "type" : [ "null", "string" ]
+        } ]
+      }
+    } ]
+  }, {
+    "name" : "user",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "User",
+      "doc" : "Schema for twitter4j.User",
+      "fields" : [ {
+        "name" : "accessLevel",
+        "type" : "int"
+      }, {
+        "name" : "biggerProfileImageURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "biggerProfileImageURLHttps",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "contributorsEnabled",
+        "type" : "boolean"
+      }, {
+        "name" : "createdAt",
+        "type" : [ "null", "long" ]
+      }, {
+        "name" : "defaultProfile",
+        "type" : "boolean"
+      }, {
+        "name" : "defaultProfileImage",
+        "type" : "boolean"
+      }, {
+        "name" : "description",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "descriptionURLEntities",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "URLEntity"
+        } ]
+      }, {
+        "name" : "favouritesCount",
+        "type" : "int"
+      }, {
+        "name" : "followRequestSent",
+        "type" : "boolean"
+      }, {
+        "name" : "followersCount",
+        "type" : "int"
+      }, {
+        "name" : "friendsCount",
+        "type" : "int"
+      }, {
+        "name" : "geoEnabled",
+        "type" : "boolean"
+      }, {
+        "name" : "id",
+        "type" : "long"
+      }, {
+        "name" : "lang",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "listedCount",
+        "type" : "int"
+      }, {
+        "name" : "location",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "miniProfileImageURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "miniProfileImageURLHttps",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "originalProfileImageURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "originalProfileImageURLHttps",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBackgroundColor",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBackgroundImageURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBackgroundImageUrlHttps",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBackgroundTiled",
+        "type" : "boolean"
+      }, {
+        "name" : "profileBannerIPadRetinaURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBannerIPadURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBannerMobileRetinaURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBannerMobileURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBannerRetinaURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileBannerURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileImageURL",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileImageURLHttps",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileLinkColor",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileSidebarBorderColor",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileSidebarFillColor",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileTextColor",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "profileUseBackgroundImage",
+        "type" : "boolean"
+      }, {
+        "name" : "protected",
+        "type" : "boolean"
+      }, {
+        "name" : "rateLimitStatus",
+        "type" : [ "null", "RateLimitStatus" ]
+      }, {
+        "name" : "screenName",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "showAllInlineMedia",
+        "type" : "boolean"
+      }, {
+        "name" : "status",
+        "type" : [ "null", "Status" ]
+      }, {
+        "name" : "statusesCount",
+        "type" : "int"
+      }, {
+        "name" : "timeZone",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "translator",
+        "type" : "boolean"
+      }, {
+        "name" : "url",
+        "type" : [ "null", "string" ]
+      }, {
+        "name" : "urlentity",
+        "type" : [ "null", "URLEntity" ]
+      }, {
+        "name" : "utcOffset",
+        "type" : "int"
+      }, {
+        "name" : "verified",
+        "type" : "boolean"
+      }, {
+        "name" : "withheldInCountries",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "string"
+        } ]
+      } ]
+    } ]
+  }, {
+    "name" : "userMentionEntities",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "UserMentionEntity",
+        "doc" : "Schema for twitter4j.UserMentionEntity",
+        "fields" : [ {
+          "name" : "end",
+          "type" : "int"
+        }, {
+          "name" : "id",
+          "type" : "long"
+        }, {
+          "name" : "name",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "screenName",
+          "type" : [ "null", "string" ]
+        }, {
+          "name" : "start",
+          "type" : "int"
+        }, {
+          "name" : "text",
+          "type" : [ "null", "string" ]
+        } ]
+      }
+    } ]
+  }, {
+    "name" : "withheldInCountries",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ]
+  } ]
+}
