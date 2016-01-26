@@ -24,13 +24,12 @@ object DictionaryLoader {
     breakable {
       for (line <- src.getLines()) {
         val cols: Array[String] = line.split(FILE_DELIMITOR)
-        val word = cols(0)
+        val word = cols(0).toLowerCase
         val score = cols(1) match {
           case "positive" => 1
           case "negative" => -1
           case _ => 0
         }
-        println(s"Adding to word dictionary: $word $score")
         words += word -> score
       }
     }

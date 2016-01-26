@@ -27,23 +27,28 @@ object KafkaConsumerApp extends App {
 
   val dictionary = DictionaryLoader.fetchWords()
   val hashtags = HashtagsLoader.fetchHashtags()
-  val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Tweet].invert(x._2).toOption)
-  val wordCounts = tweets.flatMap(t => scoring(t)).reduceByKey(_ + _)
 
-  def scoring(t: Tweet): Seq[(String, Int)] = {
+  val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Tweet].invert(x._2).toOption)
+  val scores = tweets.flatMap(t => scoring(t)).reduceByKeyAndWindow((v1, v2) => add(v1, v2), Seconds(30))
+
+  def add(v1: (Int, Int), v2: (Int, Int)): (Int, Int) = {
+    (v1._1 + v2._1, v1._2 + v2._2)
+  }
+
+  def scoring(t: Tweet): Seq[(String, (Int, Int))] = {
     val words = t.getText.split(" ")
-    val score = words.filter(dictionary.contains)
-      .map(dictionary.get)
+    val score = words.filter(w => dictionary.contains(w.toLowerCase()))
+      .map(w => dictionary.get(w.toLowerCase))
       .foldLeft(Some(0))((a, b) => Some(a.getOrElse(0) + b.getOrElse(0)))
-    val matchedHashtags = words.filter(hashtags.contains)
-    var scoreMap = Seq[(String, Int)]()
-    matchedHashtags.foreach((tag) => scoreMap = scoreMap :+(tag, score.get))
+    val matchedHashtags = words.filter(w => hashtags.contains(w.toUpperCase))
+    var scoreMap = Seq[(String, (Int, Int))]()
+    matchedHashtags.foreach((tag) => scoreMap = scoreMap :+(tag.toUpperCase, (score.get, 1)))
     scoreMap
   }
 
-  val countsSorted = wordCounts.transform(_.sortBy(_._2, ascending = false))
+  val scoreSorted = scores.transform(_.sortBy(_._2._2, ascending = false))
 
-  countsSorted.print()
+  scoreSorted.print()
 
   sc.start()
   sc.awaitTermination()

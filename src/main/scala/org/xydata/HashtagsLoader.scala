@@ -25,8 +25,7 @@ object HashtagsLoader {
     val src = Source.fromInputStream(stream)
     breakable {
       for (line <- src.getLines()) {
-        val hashtag = line.split(FILE_DELIMITOR)(0)
-        println("Adding to hashtag filters: " + hashtag)
+        val hashtag = line.split(FILE_DELIMITOR)(0).toUpperCase
         stockSymbolList :+= hashtag
         if (stockSymbolList.length >= num) {
           break
