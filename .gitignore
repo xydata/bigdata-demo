@@ -77,6 +77,4 @@ project/plugins/project/
 .worksheet
 
 ### Scala Typesafe Config ###
-application.conf
-
-src/main/resources/reference.conf
+reference.conf
