@@ -1,7 +1,7 @@
 {
   "type" : "record",
   "name" : "Status",
-  "namespace" : "twitter4j",
+  "namespace" : "org.xydata.avro",
   "doc" : "Schema for twitter4j.Status",
   "fields" : [ {
     "name" : "accessLevel",

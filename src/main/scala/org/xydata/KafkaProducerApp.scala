@@ -7,8 +7,7 @@ import com.typesafe.config.ConfigFactory
 import kafka.javaapi.producer.Producer
 import kafka.producer.{KeyedMessage, ProducerConfig}
 import org.xydata.TwitterStream.OnTweetPosted
-import org.xydata.avro.Tweet
-import twitter4j.{FilterQuery, Status}
+import twitter4j.FilterQuery
 
 object KafkaProducerApp {
 
@@ -27,17 +26,17 @@ object KafkaProducerApp {
   def main(args: Array[String]) {
     val twitterStream = TwitterStream.getStream
     val filterSPComs = new FilterQuery().track(HashtagsLoader.fetchHashtags(): _*)
-    twitterStream.addListener(new OnTweetPosted(s => sendToKafka(toTweet(s))))
+    twitterStream.addListener(new OnTweetPosted(s => sendToKafka(toStatus(s))))
     twitterStream.filter(filterSPComs)
   }
 
-  private def toTweet(s: Status): Tweet = {
-    new Tweet(s.getUser.getName, s.getText)
+  private def toStatus(status4j: twitter4j.Status): org.xydata.avro.Status = {
+    StatusBuilder.build(status4j);
   }
 
-  private def sendToKafka(t: Tweet) {
-    println(toJson(t.getSchema).apply(t))
-    val tweetEnc = toBinary[Tweet].apply(t)
+  private def sendToKafka(s: org.xydata.avro.Status) {
+    println(toJson(s.getSchema).apply(s))
+    val tweetEnc = toBinary[org.xydata.avro.Status].apply(s)
     val msg = new KeyedMessage[String, Array[Byte]](KafkaTopic, tweetEnc)
     kafkaProducer.send(msg)
   }

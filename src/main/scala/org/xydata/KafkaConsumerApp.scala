@@ -7,7 +7,7 @@ import org.apache.spark._
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka._
-import org.xydata.avro.Tweet
+import org.xydata.avro._
 
 object KafkaConsumerApp extends App {
 
@@ -28,14 +28,14 @@ object KafkaConsumerApp extends App {
   val dictionary = DictionaryLoader.fetchWords()
   val hashtags = HashtagsLoader.fetchHashtags()
 
-  val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Tweet].invert(x._2).toOption)
+  val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Status].invert(x._2).toOption)
   val scores = tweets.flatMap(t => scoring(t)).reduceByKeyAndWindow((v1, v2) => add(v1, v2), Seconds(30))
 
   def add(v1: (Int, Int), v2: (Int, Int)): (Int, Int) = {
     (v1._1 + v2._1, v1._2 + v2._2)
   }
 
-  def scoring(t: Tweet): Seq[(String, (Int, Int))] = {
+  def scoring(t: Status): Seq[(String, (Int, Int))] = {
     val words = t.getText.split(" ")
     val score = words.filter(w => dictionary.contains(w.toLowerCase()))
       .map(w => dictionary.get(w.toLowerCase))
