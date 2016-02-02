@@ -23,54 +23,42 @@ public class StatusBuilder {
     public static Status build(twitter4j.Status statusT4j){
 
         Status status = new Status();
-
         status.setAccessLevel(statusT4j.getAccessLevel());
-        status.setContributors(getContributors(statusT4j));
-        status.setCreatedAt(statusT4j.getCreatedAt().getTime());
+        status.setContributors(getContributors(statusT4j.getContributors()));
+        if(null!=statusT4j.getCreatedAt()){
+            status.setCreatedAt(statusT4j.getCreatedAt().getTime());
+        }
         status.setCurrentUserRetweetId(statusT4j.getCurrentUserRetweetId());
-        status.setExtendedMediaEntities(getExtendedMediaEntities(statusT4j));
+        status.setExtendedMediaEntities(getExtendedMediaEntities(statusT4j.getExtendedMediaEntities()));
         status.setFavoriteCount(statusT4j.getFavoriteCount());
-        status.setGeoLocation(getGeoLocation(statusT4j));
-        status.setHashtagEntities(getHashtagEntities(statusT4j));
+        status.setGeoLocation(getGeoLocation(statusT4j.getGeoLocation()));
+        status.setHashtagEntities(getHashtagEntities(statusT4j.getHashtagEntities()));
         status.setId(statusT4j.getId());
         status.setInReplyToScreenName(statusT4j.getInReplyToScreenName());
         status.setInReplyToStatusId(statusT4j.getInReplyToStatusId());
         status.setInReplyToUserId(statusT4j.getInReplyToUserId());
         status.setLang(statusT4j.getLang());
-        status.setMediaEntities(getMediaEntites(statusT4j));
-        status.setPlace(getPlace(statusT4j));
+        status.setMediaEntities(getMediaEntites(statusT4j.getMediaEntities()));
+        status.setPlace(getPlace(statusT4j.getPlace()));
         status.setPossiblySensitive(statusT4j.isPossiblySensitive());
-
-        RateLimitStatus rateLimitStatus = new RateLimitStatus();
-        twitter4j.RateLimitStatus rls = statusT4j.getRateLimitStatus();
-        rateLimitStatus.setLimit(rls.getLimit());
-        rateLimitStatus.setRemaining(rls.getRemaining());
-        rateLimitStatus.setResetTimeInSeconds(rls.getResetTimeInSeconds());
-        rateLimitStatus.setSecondsUntilReset(rls.getResetTimeInSeconds());
-
-
-        status.setRateLimitStatus(rateLimitStatus);
+        status.setRateLimitStatus(getRateLimitStatus(statusT4j.getRateLimitStatus()));
         status.setRetweet(statusT4j.isRetweet());
         status.setRetweetCount(statusT4j.getRetweetCount());
         status.setRetweeted(statusT4j.isRetweeted());
         status.setRetweetedByMe(statusT4j.isRetweetedByMe());
-        status.setRetweetedStatus(build(statusT4j.getRetweetedStatus()));
-
-        Scopes scopes = new Scopes();
-        twitter4j.Scopes s = statusT4j.getScopes();
-        scopes.setPlaceIds(Arrays.asList(s.getPlaceIds()));
-        status.setScopes(scopes);
-        status.setSource(statusT4j.getSource());
-
-        List<SymbolEntity> symbolEntities = new ArrayList<>();
-        for(twitter4j.SymbolEntity se:statusT4j.getSymbolEntities()){
-            SymbolEntity symbolEntity = new SymbolEntity();
-            symbolEntity.setEnd(se.getEnd());
-            symbolEntity.setStart(se.getStart());
-            symbolEntity.setText(se.getText());
-            symbolEntities.add(symbolEntity);
+        if(null!=statusT4j.getRetweetedStatus()){
+            status.setRetweetedStatus(build(statusT4j.getRetweetedStatus()));
         }
-        status.setSymbolEntities(symbolEntities);
+
+
+        twitter4j.Scopes s = statusT4j.getScopes();
+        if(null!=s &&null!=s.getPlaceIds()){
+            Scopes scopes = new Scopes();
+            scopes.setPlaceIds(Arrays.asList(s.getPlaceIds()));
+            status.setScopes(scopes);
+        }
+        status.setSource(statusT4j.getSource());
+        status.setSymbolEntities(getSymbolEntities(statusT4j.getSymbolEntities()));
         status.setText(statusT4j.getText());
         status.setTruncated(statusT4j.isTruncated());
         //status.setUrlentities(statusT4j.getURLEntities());
@@ -82,10 +70,39 @@ public class StatusBuilder {
 
     }
 
-    private static List<MediaEntity> getMediaEntites(twitter4j.Status statusT4j) {
-        List<MediaEntity> mediaEntitys = new ArrayList<>();
+    private static List<SymbolEntity> getSymbolEntities(twitter4j.SymbolEntity[] symbolEntitiesT4j) {
+        if(null==symbolEntitiesT4j){
+            return null;
+        }
+        List<SymbolEntity> symbolEntities = new ArrayList<>();
+        for(twitter4j.SymbolEntity se:symbolEntitiesT4j){
+            SymbolEntity symbolEntity = new SymbolEntity();
+            symbolEntity.setEnd(se.getEnd());
+            symbolEntity.setStart(se.getStart());
+            symbolEntity.setText(se.getText());
+            symbolEntities.add(symbolEntity);
+        }
+        return symbolEntities;
+    }
 
-        for(twitter4j.MediaEntity emeT4j :statusT4j.getMediaEntities()) {
+    private static RateLimitStatus getRateLimitStatus(twitter4j.RateLimitStatus rateLimitStatusT4j) {
+        if (null == rateLimitStatusT4j) {
+            return null;
+        }
+        RateLimitStatus rateLimitStatus = new RateLimitStatus();
+        rateLimitStatus.setLimit(rateLimitStatusT4j.getLimit());
+        rateLimitStatus.setRemaining(rateLimitStatusT4j.getRemaining());
+        rateLimitStatus.setResetTimeInSeconds(rateLimitStatusT4j.getResetTimeInSeconds());
+        rateLimitStatus.setSecondsUntilReset(rateLimitStatusT4j.getResetTimeInSeconds());
+        return rateLimitStatus;
+    }
+
+    private static List<MediaEntity> getMediaEntites(twitter4j.MediaEntity[] mediaEntitiesT4j) {
+        if(null==mediaEntitiesT4j){
+            return null;
+        }
+        List<MediaEntity> mediaEntities = new ArrayList<>();
+        for(twitter4j.MediaEntity emeT4j :mediaEntitiesT4j) {
             MediaEntity eme = new MediaEntity();
             eme.setDisplayURL(emeT4j.getDisplayURL());
             eme.setEnd(emeT4j.getEnd());
@@ -93,32 +110,21 @@ public class StatusBuilder {
             eme.setId(emeT4j.getId());
             eme.setMediaURL(emeT4j.getMediaURL());
             eme.setMediaURLHttps(emeT4j.getMediaURLHttps());
-
-
-            Map<String, Size> sizes = new HashMap<>();
-            for (Map.Entry<Integer, twitter4j.MediaEntity.Size> entry : emeT4j.getSizes().entrySet()) {
-                Size s = new Size();
-                s.setHeight(entry.getValue().getHeight());
-                s.setResize(entry.getValue().getResize());
-                s.setWidth(entry.getValue().getWidth());
-                sizes.put(Integer.toString(entry.getKey()), s);
-            }
-            eme.setSizes(sizes);
+            eme.setSizes(getStringSizeMap(emeT4j.getSizes()));
             eme.setStart(emeT4j.getStart());
             eme.setText(emeT4j.getText());
             eme.setType(emeT4j.getType());
             eme.setUrl(emeT4j.getURL());
-
-            mediaEntitys.add(eme);
-
+            mediaEntities.add(eme);
         }
-
-        return mediaEntitys;
+        return mediaEntities;
     }
 
-    private static Place getPlace(twitter4j.Status statusT4j) {
+    private static Place getPlace(twitter4j.Place p) {
+        if(null == p){
+            return null;
+        }
         Place place = new Place();
-        twitter4j.Place p = statusT4j.getPlace();
         place.setAccessLevel(p.getAccessLevel());
         //place.setBoundingBoxCoordinates(p.getBoundingBoxCoordinates());
         place.setBoundingBoxType(p.getBoundingBoxType());
@@ -137,9 +143,12 @@ public class StatusBuilder {
         return place;
     }
 
-    private static List<HashtagEntity> getHashtagEntities(twitter4j.Status statusT4j) {
+    private static List<HashtagEntity> getHashtagEntities(twitter4j.HashtagEntity[] hashtagEntitiesT4j) {
+        if(null==hashtagEntitiesT4j){
+            return null;
+        }
         List<HashtagEntity> hashtagEntities = new ArrayList<>();
-        for(twitter4j.HashtagEntity he:statusT4j.getHashtagEntities()){
+        for(twitter4j.HashtagEntity he:hashtagEntitiesT4j){
             HashtagEntity hashtagEntity = new HashtagEntity();
             hashtagEntity.setEnd(he.getEnd());
             hashtagEntity.setStart(he.getStart());
@@ -150,18 +159,23 @@ public class StatusBuilder {
         return hashtagEntities;
     }
 
-    private static GeoLocation getGeoLocation(twitter4j.Status statusT4j) {
+    private static GeoLocation getGeoLocation(twitter4j.GeoLocation geoLocationT4j) {
+        if(null==geoLocationT4j){
+            return null;
+        }
         GeoLocation geoLocation = new GeoLocation();
-        twitter4j.GeoLocation g  = statusT4j.getGeoLocation();
-        geoLocation.setLatitude(g.getLatitude());
-        geoLocation.setLongitude(g.getLongitude());
+        geoLocation.setLatitude(geoLocationT4j.getLatitude());
+        geoLocation.setLongitude(geoLocationT4j.getLongitude());
         return geoLocation;
     }
 
-    private static List<ExtendedMediaEntity> getExtendedMediaEntities(twitter4j.Status statusT4j) {
-        List<ExtendedMediaEntity> extendedMediaEntitys = new ArrayList<>();
+    private static List<ExtendedMediaEntity> getExtendedMediaEntities(twitter4j.ExtendedMediaEntity[] extendedMediaEntitiesT4j) {
+        if(null==extendedMediaEntitiesT4j){
+            return null;
+        }
 
-        for(twitter4j.ExtendedMediaEntity emeT4j :statusT4j.getExtendedMediaEntities()){
+        List<ExtendedMediaEntity> extendedMediaEntities = new ArrayList<>();
+        for(twitter4j.ExtendedMediaEntity emeT4j :extendedMediaEntitiesT4j){
             ExtendedMediaEntity eme = new ExtendedMediaEntity();
             eme.setDisplayURL(emeT4j.getDisplayURL());
             eme.setEnd(emeT4j.getEnd());
@@ -169,18 +183,7 @@ public class StatusBuilder {
             eme.setId(emeT4j.getId());
             eme.setMediaURL(emeT4j.getMediaURL());
             eme.setMediaURLHttps(emeT4j.getMediaURLHttps());
-
-
-
-            Map<String,Size> sizes = new HashMap<>();
-            for(Map.Entry<Integer,twitter4j.MediaEntity.Size> entry:emeT4j.getSizes().entrySet()){
-                Size s = new Size();
-                s.setHeight(entry.getValue().getHeight());
-                s.setResize(entry.getValue().getResize());
-                s.setWidth(entry.getValue().getWidth());
-                sizes.put(Integer.toString(entry.getKey()),s);
-            }
-            eme.setSizes(sizes);
+            eme.setSizes(getStringSizeMap(emeT4j.getSizes()));
             eme.setStart(emeT4j.getStart());
             eme.setText(emeT4j.getText());
             eme.setType(emeT4j.getType());
@@ -188,27 +191,51 @@ public class StatusBuilder {
             eme.setVideoAspectRatioHeight(emeT4j.getVideoAspectRatioHeight());
             eme.setVideoAspectRatioWidth(emeT4j.getVideoAspectRatioWidth());
             eme.setVideoDurationMillis(emeT4j.getVideoDurationMillis());
-
-            List<Variant> variants = new ArrayList<>();
-
-            for(twitter4j.ExtendedMediaEntity.Variant v : emeT4j.getVideoVariants()){
-                Variant variant = new Variant();
-                variant.setBitrate(v.getBitrate());
-                variant.setContentType(v.getContentType());
-                variant.setUrl(v.getUrl());
-                variants.add(variant);
-            }
-
-
-            eme.setVideoVariants(variants);
-            extendedMediaEntitys.add(eme);
+            eme.setVideoVariants(getVariants(emeT4j.getVideoVariants()));
+            extendedMediaEntities.add(eme);
         }
-        return extendedMediaEntitys;
+        return extendedMediaEntities;
     }
 
-    private static List<Double> getContributors(twitter4j.Status statusT4j) {
+    private static List<Variant> getVariants(twitter4j.ExtendedMediaEntity.Variant[] variantT4j) {
+        if(null==variantT4j){
+            return null;
+        }
+        List<Variant> variants = new ArrayList<>();
+        for(twitter4j.ExtendedMediaEntity.Variant v : variantT4j){
+            Variant variant = new Variant();
+            variant.setBitrate(v.getBitrate());
+            variant.setContentType(v.getContentType());
+            variant.setUrl(v.getUrl());
+            variants.add(variant);
+        }
+        return variants;
+    }
+
+    private static Map<String, Size> getStringSizeMap(Map<Integer, twitter4j.MediaEntity.Size> sizeMapT4j) {
+        if(null==sizeMapT4j){
+            return null;
+        }
+        Map<String,Size> sizes = new HashMap<>();
+        for(Map.Entry<Integer,twitter4j.MediaEntity.Size> entry:sizeMapT4j.entrySet()){
+            Size s = new Size();
+            twitter4j.MediaEntity.Size sT4j = entry.getValue();
+            if(null!=sT4j){
+                s.setHeight(sT4j.getHeight());
+                s.setResize(sT4j.getResize());
+                s.setWidth(sT4j.getWidth());
+            }
+            sizes.put(Integer.toString(entry.getKey()),s);
+        }
+        return sizes;
+    }
+
+    private static List<Double> getContributors(long[] contributorsT4j) {
+        if(null==contributorsT4j){
+            return null;
+        }
         List<Double> contributors = new ArrayList<>();
-        for(Long d :statusT4j.getContributors()){
+        for(Long d :contributorsT4j){
             contributors.add(d.doubleValue());
         }
         return contributors;
