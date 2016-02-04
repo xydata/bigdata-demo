@@ -1,6 +1,7 @@
 package org.xydata
 
 import org.scalatest._
+import org.xydata.util.DictionaryLoader
 
 /**
   * Created by iyunbo on 24/01/16.

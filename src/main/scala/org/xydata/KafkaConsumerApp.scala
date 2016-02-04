@@ -8,13 +8,14 @@ import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka._
 import org.xydata.avro._
+import org.xydata.util.{HashtagsLoader, DictionaryLoader}
 
 object KafkaConsumerApp extends App {
 
   private val conf = ConfigFactory.load()
 
-  val sparkConf = new SparkConf().setAppName("bigdata-demo").setMaster("local[*]")
-  val sc = new StreamingContext(sparkConf, Seconds(5))
+  val sparkConf = new SparkConf().setAppName("bigdata-demo").setMaster(conf.getString("spark.master.url"))
+  val sc = new StreamingContext(sparkConf, Seconds(conf.getInt("tweeter.stream.heartbeat")))
 
   val encTweets = {
     val topics = Map(KafkaProducerApp.KafkaTopic -> 1)
@@ -29,7 +30,7 @@ object KafkaConsumerApp extends App {
   val hashtags = HashtagsLoader.fetchHashtags()
 
   val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Status].invert(x._2).toOption)
-  val scores = tweets.flatMap(t => scoring(t)).reduceByKeyAndWindow((v1, v2) => add(v1, v2), Seconds(30))
+  val scores = tweets.flatMap(t => scoring(t)).reduceByKeyAndWindow((v1, v2) => add(v1, v2), Seconds(conf.getInt("tweeter.stream.window")))
 
   def add(v1: (Int, Int), v2: (Int, Int)): (Int, Int) = {
     (v1._1 + v2._1, v1._2 + v2._2)

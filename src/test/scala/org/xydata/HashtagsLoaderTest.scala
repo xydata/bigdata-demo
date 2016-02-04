@@ -1,6 +1,7 @@
 package org.xydata
 
 import org.scalatest._
+import org.xydata.util.HashtagsLoader
 
 /**
   * Created by iyunbo on 24/01/16.

@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigFactory
 import kafka.javaapi.producer.Producer
 import kafka.producer.{KeyedMessage, ProducerConfig}
 import org.xydata.TwitterStream.OnTweetPosted
+import org.xydata.util.HashtagsLoader
 import twitter4j.FilterQuery
 
 object KafkaProducerApp {
@@ -31,7 +32,7 @@ object KafkaProducerApp {
   }
 
   private def toStatus(status4j: twitter4j.Status): org.xydata.avro.Status = {
-    StatusBuilder.build(status4j);
+    StatusBuilder.build(status4j)
   }
 
   private def sendToKafka(s: org.xydata.avro.Status) {

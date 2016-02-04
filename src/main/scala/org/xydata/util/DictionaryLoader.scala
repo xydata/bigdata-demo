@@ -1,6 +1,8 @@
-package org.xydata
+package org.xydata.util
 
 import java.io.InputStream
+
+import com.typesafe.config.ConfigFactory
 
 import scala.io.Source
 import scala.util.control.Breaks._
@@ -10,8 +12,10 @@ import scala.util.control.Breaks._
   */
 object DictionaryLoader {
 
+  private val conf = ConfigFactory.load()
+
   //Location of CSV file from where to read words
-  private val CSV_LOCATION = "/dictionary.csv"
+  private val CSV_LOCATION = conf.getString("files.dictionary.path")
 
   //Delimitor used in CSV file
   private val FILE_DELIMITOR = ","
