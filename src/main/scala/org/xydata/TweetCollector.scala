@@ -2,11 +2,12 @@ package org.xydata
 
 import java.util.Properties
 
-import com.twitter.bijection.avro.SpecificAvroCodecs.{toBinary, toJson}
+import com.twitter.bijection.avro.SpecificAvroCodecs.toBinary
 import com.typesafe.config.ConfigFactory
 import kafka.javaapi.producer.Producer
 import kafka.producer.{KeyedMessage, ProducerConfig}
 import org.xydata.TwitterStream.OnTweetPosted
+import org.xydata.avro.Status
 import org.xydata.util.HashtagsLoader
 import twitter4j.FilterQuery
 
@@ -31,13 +32,13 @@ object TweetCollector {
     twitterStream.filter(filterSPComs)
   }
 
-  private def toStatus(status4j: twitter4j.Status): org.xydata.avro.Status = {
+  private def toStatus(status4j: twitter4j.Status): Status = {
     StatusBuilder.build(status4j)
   }
 
-  private def sendToKafka(s: org.xydata.avro.Status) {
-    println(toJson(s.getSchema).apply(s))
-    val tweetEnc = toBinary[org.xydata.avro.Status].apply(s)
+  private def sendToKafka(s: Status) {
+    println(s.getUser + ": " + s.getText)
+    val tweetEnc = toBinary[Status].apply(s)
     val msg = new KeyedMessage[String, Array[Byte]](KafkaTopic, tweetEnc)
     kafkaProducer.send(msg)
   }
