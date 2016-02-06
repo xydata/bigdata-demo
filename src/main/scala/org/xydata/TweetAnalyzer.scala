@@ -8,7 +8,7 @@ import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka._
 import org.xydata.avro._
-import org.xydata.util.{HashtagsLoader, DictionaryLoader}
+import org.xydata.util.{DictionaryLoader, HashtagsLoader}
 
 object TweetAnalyzer extends App {
 
@@ -30,14 +30,21 @@ object TweetAnalyzer extends App {
   val hashtags = HashtagsLoader.fetchHashtags()
 
   val tweets = encTweets.flatMap(x => SpecificAvroCodecs.toBinary[Status].invert(x._2).toOption)
-  val scores = tweets.flatMap(t => scoring(t)).reduceByKeyAndWindow((v1, v2) => add(v1, v2), Seconds(conf.getInt("tweeter.stream.window")))
+  val scores = tweets
+    // split into phrases
+    .flatMap(t => t.getText.split("\\.\\s"))
+    // calculate scores
+    .flatMap(t => scoring(t))
+    .reduceByKeyAndWindow(
+      (v1, v2) => add(v1, v2), Seconds(conf.getInt("tweeter.stream.window"))
+    )
 
   def add(v1: (Int, Int), v2: (Int, Int)): (Int, Int) = {
     (v1._1 + v2._1, v1._2 + v2._2)
   }
 
-  def scoring(t: Status): Seq[(String, (Int, Int))] = {
-    val words = t.getText.split(" ")
+  def scoring(phrase: String): Seq[(String, (Int, Int))] = {
+    val words = phrase.split(" ")
     val score = words.filter(w => dictionary.contains(w.toLowerCase()))
       .map(w => dictionary.get(w.toLowerCase))
       .foldLeft(Some(0))((a, b) => Some(a.getOrElse(0) + b.getOrElse(0)))
