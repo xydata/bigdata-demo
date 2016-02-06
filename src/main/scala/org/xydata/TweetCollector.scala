@@ -10,7 +10,7 @@ import org.xydata.TwitterStream.OnTweetPosted
 import org.xydata.util.HashtagsLoader
 import twitter4j.FilterQuery
 
-object KafkaProducerApp {
+object TweetCollector {
 
   private val conf = ConfigFactory.load()
 

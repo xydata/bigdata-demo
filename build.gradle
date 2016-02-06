@@ -29,19 +29,17 @@ dependencies {
 }
 
 
-task produce(type: JavaExec, dependsOn: classes) {
-    main = 'org.xydata.KafkaProducerApp'
+task collect(type: JavaExec, dependsOn: classes) {
+    main = 'org.xydata.TweetCollector'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
 
-task consume(type: JavaExec, dependsOn: classes) {
-    main = 'org.xydata.KafkaConsumerApp'
+task analyze(type: JavaExec, dependsOn: classes) {
+    main = 'org.xydata.TweetAnalyzer'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
-
-
 
 // enable fast scala compiler
 compileScala {

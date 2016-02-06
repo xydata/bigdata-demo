@@ -10,7 +10,7 @@ import org.apache.spark.streaming.kafka._
 import org.xydata.avro._
 import org.xydata.util.{HashtagsLoader, DictionaryLoader}
 
-object KafkaConsumerApp extends App {
+object TweetAnalyzer extends App {
 
   private val conf = ConfigFactory.load()
 
@@ -18,7 +18,7 @@ object KafkaConsumerApp extends App {
   val sc = new StreamingContext(sparkConf, Seconds(conf.getInt("tweeter.stream.heartbeat")))
 
   val encTweets = {
-    val topics = Map(KafkaProducerApp.KafkaTopic -> 1)
+    val topics = Map(TweetCollector.KafkaTopic -> 1)
     val kafkaParams = Map(
       "zookeeper.connect" -> conf.getString("kafka.zookeeper.quorum"),
       "group.id" -> "1")
