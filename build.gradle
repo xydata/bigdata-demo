@@ -11,6 +11,7 @@ repositories {
 }
 
 def scalaVersion = "2.11"
+def macwireVersion = "2.2.2"
 
 dependencies {
     compile 'org.twitter4j:twitter4j-stream:4.0.4'
@@ -25,18 +26,22 @@ dependencies {
     compile "com.twitter:bijection-core_${scalaVersion}:0.8.1"
     compile "com.twitter:bijection-avro_${scalaVersion}:0.8.1"
 
+    compile "com.softwaremill.macwire:macros_${scalaVersion}:${macwireVersion}"
+    compile "com.softwaremill.macwire:util_${scalaVersion}:${macwireVersion}"
+    compile "com.softwaremill.macwire:proxy_${scalaVersion}:${macwireVersion}"
+
     testCompile "org.scalatest:scalatest_${scalaVersion}:2.2.6"
 }
 
 
 task collect(type: JavaExec, dependsOn: classes) {
-    main = 'org.xydata.TweetCollector'
+    main = 'org.xydata.twitter.TweetCollector'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
 
 task analyze(type: JavaExec, dependsOn: classes) {
-    main = 'org.xydata.TweetAnalyzer'
+    main = 'org.xydata.twitter.TweetAnalyzer'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }

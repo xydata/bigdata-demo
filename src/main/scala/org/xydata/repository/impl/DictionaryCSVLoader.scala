@@ -1,8 +1,9 @@
-package org.xydata.util
+package org.xydata.repository.impl
 
 import java.io.InputStream
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.Config
+import org.xydata.repository.DictionaryDao
 
 import scala.io.Source
 import scala.util.control.Breaks._
@@ -10,20 +11,16 @@ import scala.util.control.Breaks._
 /**
   * Created by iyunbo on 24/01/16.
   */
-object DictionaryLoader {
+class DictionaryCSVLoader(appConf: Config) extends DictionaryDao {
 
-  private val conf = ConfigFactory.load()
-
-  //Location of CSV file from where to read words
-  private val CSV_LOCATION = conf.getString("files.dictionary.path")
-
+  lazy val dictionaryPath = appConf.getString("files.dictionary.path")
   //Delimitor used in CSV file
   private val FILE_DELIMITOR = ","
 
-  def fetchWords(): Map[String, Int] = {
-    val stream: InputStream = getClass.getResourceAsStream(CSV_LOCATION)
+  def fetch(): Map[String, Int] = {
+    val stream: InputStream = getClass.getResourceAsStream(dictionaryPath)
     var words = Map[String, Int]()
-    println("Reading dictionary from " + CSV_LOCATION)
+    println("Reading dictionary from " + dictionaryPath)
     val src = Source.fromInputStream(stream)
     breakable {
       for (line <- src.getLines()) {

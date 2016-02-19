@@ -1,8 +1,9 @@
-package org.xydata.util
+package org.xydata.repository.impl
 
 import java.io.InputStream
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.Config
+import org.xydata.repository.HashtagsDao
 
 import scala.io.Source
 import scala.util.control.Breaks._
@@ -10,21 +11,17 @@ import scala.util.control.Breaks._
 /**
   * Created by iyunbo on 24/01/16.
   */
-object HashtagsLoader {
+class HashtagsCSVLoader(appConf: Config) extends HashtagsDao {
+  lazy val hashtagsPath = appConf.getString("files.securities.path")
   //max number of hashtags allowed by Twitter streaming APIs filter
-  private val MAX_NUM_TWITTER_HASHTAG = 400
-  private val conf = ConfigFactory.load()
-
-  //Location of CSV file from where to read stocks
-  private val CSV_LOCATION = conf.getString("files.securities.path")
-
+  private[repository] val MAX_NUM_TWITTER_HASHTAG = 400
   //Delimitor used in CSV file
   private val FILE_DELIMITOR = ","
 
-  def fetchHashtags(num: Int = MAX_NUM_TWITTER_HASHTAG): Array[String] = {
-    val stream: InputStream = getClass.getResourceAsStream(CSV_LOCATION)
+  def fetch(num: Int = MAX_NUM_TWITTER_HASHTAG): Array[String] = {
+    val stream: InputStream = getClass.getResourceAsStream(hashtagsPath)
     var stockSymbolList = Array[String]()
-    println("Reading stock symbols to send to Twitter from " + CSV_LOCATION)
+    println("Reading stock symbols to send to Twitter from " + hashtagsPath)
     val src = Source.fromInputStream(stream)
     breakable {
       for (line <- src.getLines()) {
