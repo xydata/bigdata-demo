@@ -2,7 +2,7 @@ package org.xydata.communication
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.xydata.avro.{Status, User}
-import org.xydata.twitter.TweetModule
+import org.xydata.mining.twitter.TweetModule
 
 /**
   * Created by "Yunbo WANG" on 19/02/16.

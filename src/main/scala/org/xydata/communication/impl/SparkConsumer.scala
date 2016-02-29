@@ -7,7 +7,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka.KafkaUtils
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 import org.xydata.avro.Status
 import org.xydata.communication.MessageConsumer
 
@@ -25,7 +25,7 @@ class SparkConsumer(appConf: Config) extends MessageConsumer[DStream[Status]] {
   override def receive(analyze: DStream[Status] => Unit): Unit = {
 
     val sparkConf = new SparkConf().setAppName("bigdata-demo").setMaster(sparkMaster)
-    val sc = new StreamingContext(sparkConf, Seconds(tweeterHeartbeat))
+    val sc = new StreamingContext(sparkConf, Milliseconds(tweeterHeartbeat))
 
     val encTweets = {
       val topics = Map(kafkaTopic -> 1)

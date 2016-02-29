@@ -1,7 +1,7 @@
 package org.xydata.repository
 
 import org.scalatest._
-import org.xydata.twitter.TweetModule
+import org.xydata.mining.twitter.TweetModule
 
 /**
   * Created by iyunbo on 24/01/16.

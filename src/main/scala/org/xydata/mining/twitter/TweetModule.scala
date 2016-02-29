@@ -1,7 +1,9 @@
-package org.xydata.twitter
+package org.xydata.mining.twitter
 
 import com.softwaremill.macwire._
 import com.typesafe.config.ConfigFactory
+import org.apache.spark.streaming.dstream.DStream
+import org.xydata.analysis.Analyzer
 import org.xydata.analysis.impl.TwitterSparkAnalyzer
 import org.xydata.avro.Status
 import org.xydata.communication.MessageProducer
@@ -17,18 +19,18 @@ import twitter4j.conf.{Configuration, ConfigurationBuilder}
 trait TweetModule {
 
   // configuration
-  lazy val conf = ConfigFactory.load()
+  lazy val appConf = ConfigFactory.load()
   lazy val twitterConf: Configuration = {
     new ConfigurationBuilder()
-      .setOAuthConsumerKey(conf.getString("twitter.consumerKey"))
-      .setOAuthConsumerSecret(conf.getString("twitter.consumerSecret"))
-      .setOAuthAccessToken(conf.getString("twitter.accessToken"))
-      .setOAuthAccessTokenSecret(conf.getString("twitter.accessTokenSecret"))
+      .setOAuthConsumerKey(appConf.getString("twitter.consumerKey"))
+      .setOAuthConsumerSecret(appConf.getString("twitter.consumerSecret"))
+      .setOAuthAccessToken(appConf.getString("twitter.accessToken"))
+      .setOAuthAccessTokenSecret(appConf.getString("twitter.accessTokenSecret"))
       .build()
   }
 
   // beans wiring
-  lazy val twitterAnalyzer = wire[TwitterSparkAnalyzer]
+  lazy val twitterAnalyzer: Analyzer[DStream[Status]] = wire[TwitterSparkAnalyzer]
   lazy val messageProducer: MessageProducer[Status] = wire[KafkaProducer]
   lazy val messageConsumer = wire[SparkConsumer]
   lazy val dictionaryDao: DictionaryDao = wire[DictionaryCSVLoader]

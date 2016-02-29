@@ -1,7 +1,7 @@
 package org.xydata.analysis.impl
 
 import com.typesafe.config.Config
-import org.apache.spark.streaming.Seconds
+import org.apache.spark.streaming.Milliseconds
 import org.apache.spark.streaming.dstream.DStream
 import org.xydata.analysis.Analyzer
 import org.xydata.avro.Status
@@ -21,7 +21,7 @@ class TwitterSparkAnalyzer(appConf: Config, dictionary: Map[String, Int], hashta
       // calculate scores
       .flatMap(t => scoring(t))
       .reduceByKeyAndWindow(
-        (v1, v2) => reduce(v1, v2), Seconds(streamWindow)
+        (v1, v2) => reduceScore(v1, v2), Milliseconds(streamWindow)
       )
 
     val scoreSorted = scores.transform(_.sortBy(_._2._2, ascending = false))
@@ -29,7 +29,7 @@ class TwitterSparkAnalyzer(appConf: Config, dictionary: Map[String, Int], hashta
     scoreSorted.print()
   }
 
-  def reduce(v1: (Int, Int), v2: (Int, Int)): (Int, Int) = {
+  def reduceScore(v1: (Int, Int), v2: (Int, Int)): (Int, Int) = {
     (v1._1 + v2._1, v1._2 + v2._2)
   }
 
