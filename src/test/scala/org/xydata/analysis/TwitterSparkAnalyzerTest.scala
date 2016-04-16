@@ -61,7 +61,7 @@ class TwitterSparkAnalyzerTest extends FlatSpec with Matchers with BeforeAndAfte
 
     ssc = new StreamingContext(conf, batchDuration)
     sc = ssc.sparkContext
-    ssc.checkpoint(getClass.getSimpleName)
+    ssc.checkpoint("build/" + getClass.getSimpleName)
 
     twitterAnalyzer = new TwitterSparkAnalyzer(
       1,

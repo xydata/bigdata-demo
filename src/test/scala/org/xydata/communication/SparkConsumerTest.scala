@@ -28,7 +28,7 @@ class SparkConsumerTest extends FlatSpec with Matchers with MockitoSugar with Be
       .setMaster(master)
       .setAppName(appName)
     ssc = new StreamingContext(conf, batchDuration)
-    ssc.checkpoint(getClass.getSimpleName)
+    ssc.checkpoint("build/" + getClass.getSimpleName)
     sparkConsumer = new SparkConsumer("test-toptic", "localhost:2181", ssc)
 
   }
