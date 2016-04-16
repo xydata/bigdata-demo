@@ -8,7 +8,6 @@ import org.xydata.mining.twitter.TweetModule
   */
 class HashtagsCSVLoaderTest extends FlatSpec with Matchers with TweetModule {
   "HashtagsCSVLoader" should "load all stock symbols from the csv file" in {
-    val hashtags = hashtagsDao.fetch()
     hashtags.length should be(400)
   }
 }

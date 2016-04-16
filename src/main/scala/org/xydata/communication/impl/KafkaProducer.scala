@@ -15,7 +15,7 @@ import org.xydata.communication.MessageProducer
 class KafkaProducer(appConf: Config) extends MessageProducer[Status] {
   lazy val kafkaBrokers = appConf.getString("kafka.brokers")
   lazy val kafkaTopic = appConf.getString("kafka.topic")
-  lazy val producer = {
+  var producer = {
     val props = new Properties()
     props.put("metadata.broker.list", kafkaBrokers)
     props.put("request.required.acks", "1")

@@ -6,7 +6,7 @@ import org.apache.spark.streaming.dstream.DStream
 import org.xydata.analysis.Analyzer
 import org.xydata.analysis.impl.TwitterSparkAnalyzer
 import org.xydata.avro.Status
-import org.xydata.communication.MessageProducer
+import org.xydata.communication.{MessageConsumer, MessageProducer}
 import org.xydata.communication.impl.{KafkaProducer, SparkConsumer}
 import org.xydata.repository.impl._
 import org.xydata.repository.{DictionaryDao, HashtagsDao, InStream}
@@ -32,10 +32,10 @@ trait TweetModule {
   // beans wiring
   lazy val twitterAnalyzer: Analyzer[DStream[Status]] = wire[TwitterSparkAnalyzer]
   lazy val messageProducer: MessageProducer[Status] = wire[KafkaProducer]
-  lazy val messageConsumer = wire[SparkConsumer]
+  lazy val messageConsumer: MessageConsumer[DStream[Status]] = wire[SparkConsumer]
   lazy val dictionaryDao: DictionaryDao = wire[DictionaryCSVLoader]
   lazy val hashtagsDao: HashtagsDao = wire[HashtagsCSVLoader]
   lazy val twitterStream: InStream = wire[Twitter4jStream]
-  lazy val dictionary = dictionaryDao.fetch()
-  lazy val hashtags = hashtagsDao.fetch()
+  lazy val dictionary: Map[String, Int] = dictionaryDao.fetch()
+  lazy val hashtags: Array[String] = hashtagsDao.fetch()
 }

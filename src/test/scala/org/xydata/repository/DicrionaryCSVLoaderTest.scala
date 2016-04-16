@@ -8,9 +8,8 @@ import org.xydata.mining.twitter.TweetModule
   */
 class DicrionaryCSVLoaderTest extends FlatSpec with Matchers with TweetModule {
   "DicrionaryCSVLoader" should "load all words from the csv file" in {
-    val words = dictionaryDao.fetch()
-    words.size should be > 10
-    words("good") should be(1)
-    words("bad") should be(-1)
+    dictionary.size should be > 10
+    dictionary("good") should be(1)
+    dictionary("bad") should be(-1)
   }
 }
