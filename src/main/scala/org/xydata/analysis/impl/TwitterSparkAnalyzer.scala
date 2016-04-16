@@ -9,9 +9,7 @@ import org.xydata.avro.Status
 /**
   * Created by "Yunbo WANG" on 19/02/16.
   */
-class TwitterSparkAnalyzer(appConf: Config, dictionary: Map[String, Int], hashtags: Array[String]) extends Analyzer[DStream[Status]] {
-
-  lazy val streamWindow = appConf.getInt("tweeter.stream.window")
+class TwitterSparkAnalyzer(streamWindow: Int, dictionary: Map[String, Int], hashtags: Array[String]) extends Analyzer[DStream[Status]] {
 
   override def analyze(tweets: DStream[Status]): Unit = {
 

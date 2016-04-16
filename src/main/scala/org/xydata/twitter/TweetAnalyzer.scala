@@ -1,4 +1,4 @@
-package org.xydata.mining.twitter
+package org.xydata.twitter
 
 object TweetAnalyzer extends App with TweetModule {
 

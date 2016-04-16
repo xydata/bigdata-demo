@@ -1,29 +1,37 @@
 package org.xydata.analysis
 
-import java.io.File
-import java.nio.file.Files
-
-import org.apache.spark.SparkConf
-import org.apache.spark.streaming.{Milliseconds, Seconds, StreamingContext}
-import org.scalatest.{FlatSpec, Matchers}
+import org.apache.spark.rdd.RDD
+import org.apache.spark.streaming.{Milliseconds, StreamingContext}
+import org.apache.spark.{SparkConf, SparkContext}
+import org.scalatest.concurrent.Eventually
+import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import org.xydata.analysis.impl.TwitterSparkAnalyzer
 import org.xydata.avro.{Status, User}
-import org.xydata.mining.twitter.TweetModule
+
+import scala.collection.mutable
 
 /**
   * Created by "Yunbo WANG" on 19/02/16.
   */
-class TwitterSparkAnalyzerTest extends FlatSpec with Matchers with TweetModule {
+class TwitterSparkAnalyzerTest extends FlatSpec with Matchers with BeforeAndAfter with Eventually {
+
+  private val master = "local[2]"
+  private val appName = "spark-streaming-test"
+  private val batchDuration = Milliseconds(1)
+  private var sc: SparkContext = _
+  private var ssc: StreamingContext = _
+  private var twitterAnalyzer: TwitterSparkAnalyzer = _
 
   "TwitterSparkAnalyzer" should "score simple phrase" in {
-    twitterAnalyzer.scoring("$AAPL is good") should equal(Seq() :+("$AAPL", (1, 1)))
+    twitterAnalyzer.scoring("$AAPL is good") should equal(Seq(("$AAPL", (1, 1))))
   }
 
   "TwitterSparkAnalyzer" should "score 2 stocks" in {
-    twitterAnalyzer.scoring("$ADBE is good $AAPL is good") should equal(Seq() :+("$ADBE", (2, 1)) :+("$AAPL", (2, 1)))
+    twitterAnalyzer.scoring("$ADBE is good $AAPL is good") should equal(Seq(("$ADBE", (2, 1)), ("$AAPL", (2, 1))))
   }
 
   "TwitterSparkAnalyzer" should "recognize negative influence" in {
-    twitterAnalyzer.scoring("$AAPL is bad") should equal(Seq() :+("$AAPL", (-1, 1)))
+    twitterAnalyzer.scoring("$AAPL is bad") should equal(Seq(("$AAPL", (-1, 1))))
   }
 
   "TwitterSparkAnalyzer" should "summarize when reducing" in {
@@ -31,8 +39,6 @@ class TwitterSparkAnalyzerTest extends FlatSpec with Matchers with TweetModule {
   }
 
   "TwitterSparkAnalyzer" should "be able to analyze spark stream" in {
-    val ssc = initSparkStreamContext
-    val dir = initDir
     def mapToStatus(s: String): Status = {
       val status = new Status()
       val u: User = new User()
@@ -41,20 +47,32 @@ class TwitterSparkAnalyzerTest extends FlatSpec with Matchers with TweetModule {
       status.setText(s)
       status
     }
-    twitterAnalyzer.analyze(ssc.textFileStream(dir).map(mapToStatus))
+    val queue = mutable.Queue[RDD[String]]()
+    queue += sc.makeRDD(Seq("$APPL is good", "$ADBE is bad"))
+    val dstream = ssc.queueStream(queue)
+    twitterAnalyzer.analyze(dstream.map(mapToStatus))
+    ssc.start()
   }
 
-  def initDir: String = {
-    val tmp = Files.createTempDirectory(getClass.getSimpleName)
-    val tmpFile = File.createTempFile("testing", ".tmp", tmp.toFile)
-    tmpFile.deleteOnExit()
-    scala.tools.nsc.io.File(tmpFile.getPath).writeAll("$APPL good")
-    tmp.toAbsolutePath.toString
+  before {
+    val conf = new SparkConf()
+      .setMaster(master)
+      .setAppName(appName)
+
+    ssc = new StreamingContext(conf, batchDuration)
+    sc = ssc.sparkContext
+    ssc.checkpoint(getClass.getSimpleName)
+
+    twitterAnalyzer = new TwitterSparkAnalyzer(
+      1,
+      Map("good" -> 1, "bad" -> -1),
+      Array("$AAPL", "$ADBE")
+    )
   }
 
-  def initSparkStreamContext: StreamingContext = {
-    val conf = new SparkConf().setAppName(getClass.getSimpleName).setMaster(appConf.getString("spark.master.url"))
-    new StreamingContext(conf, Milliseconds(appConf.getInt("tweeter.stream.heartbeat")))
+  after {
+    if (ssc != null) {
+      ssc.stop()
+    }
   }
-
 }
